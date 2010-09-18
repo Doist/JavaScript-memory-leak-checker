@@ -1,12 +1,7 @@
-MemoryLeakChecker
-===========================================
-
-MemoryLeakChecker can check for datastructure memory leaks in JavaScript
-
 Usage
 ===========
 
-Source memory_leak_checker and call from JavaScript::
+Source memory_leak_checker.js and call from JavaScript::
 
     MemoryLeakChecker(window)
 
