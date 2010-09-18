@@ -1,7 +1,7 @@
 Usage
 ===========
 
-Source memory_leak_checker.js and call from JavaScript::
+Source memory_leak_checker.js and from JavaScript call:
 
     MemoryLeakChecker(window)
 
