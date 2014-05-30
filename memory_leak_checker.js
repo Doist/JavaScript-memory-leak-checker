@@ -47,6 +47,7 @@
             self.checked += 1;
 
             if (self.isArray(obj) || self.isObject(obj)) {
+                obj.x_leaks_checked = obj.x_leaks_checked || "";
                 if (obj.x_leaks_checked === self.uniq_id) {
                     return;
                 }
@@ -54,7 +55,7 @@
                 try {
                     obj.x_leaks_checked = self.uniq_id;
                 } catch (ee) {
-                     self.log(obj, ee);
+                    self.log(obj, ee);
                 }
 
                 setTimeout(self.partial(self.checkLeaks, obj), 5);
