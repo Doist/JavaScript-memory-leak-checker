@@ -58,7 +58,7 @@
                     self.log(obj, ee);
                 }
 
-                setTimeout(self.partial(self.checkLeaks, obj), 5);
+                window.setTimeout(self.partial(self.checkLeaks, obj), 5);
             }
         },
 
