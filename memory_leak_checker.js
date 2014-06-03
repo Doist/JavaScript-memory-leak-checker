@@ -1,7 +1,7 @@
 (function (window) {
     "use strict";
 
-    var MemoryLeakChecker = {
+    var mlc = {
         "uniq_id": String((new Date()).getTime()),
         "checked": 1,
         "is_seen": [],
@@ -13,25 +13,25 @@
         },
 
         "checkLeaks": function (obj) {
-            var self = MemoryLeakChecker, key, i, j;
+            var key, i, j;
 
-            if (!obj || (typeof obj === "function") || self.checked > 20000) {
+            if (!obj || (typeof obj === "function") || mlc.checked > 20000) {
                 return;
             }
 
-            if (self.isArray(obj) || self.isObject(obj)) {
-                if (self.isArray(obj)) {
-                    self.logTooBig(obj, obj.length);
+            if (mlc.isArray(obj) || mlc.isObject(obj)) {
+                if (mlc.isArray(obj)) {
+                    mlc.logTooBig(obj, obj.length);
                     j = obj.length;
                     for (i = 0; i < j; i += 1) {
-                        self.checkIfNeeded(obj[i]);
+                        mlc.checkIfNeeded(obj[i]);
                     }
-                } else if (self.isObject(obj)) {
-                    self.logTooBig(obj, self.getKeys(obj).length);
+                } else if (mlc.isObject(obj)) {
+                    mlc.logTooBig(obj, mlc.getKeys(obj).length);
 
                     for (key in obj) {
                         if (obj.hasOwnProperty(key)) {
-                            self.checkIfNeeded(obj[key]);
+                            mlc.checkIfNeeded(obj[key]);
                         }
                     }
                 }
@@ -43,30 +43,29 @@
                 return;
             }
 
-            var self = MemoryLeakChecker;
-            self.checked += 1;
+            mlc.checked += 1;
 
-            if (self.isArray(obj) || self.isObject(obj)) {
+            if (mlc.isArray(obj) || mlc.isObject(obj)) {
                 obj.x_leaks_checked = obj.x_leaks_checked || "";
-                if (obj.x_leaks_checked === self.uniq_id) {
+                if (obj.x_leaks_checked === mlc.uniq_id) {
                     return;
                 }
 
                 try {
-                    obj.x_leaks_checked = self.uniq_id;
+                    obj.x_leaks_checked = mlc.uniq_id;
                 } catch (ee) {
-                    self.log(obj, ee);
+                    mlc.log(obj, ee);
                 }
 
-                window.setTimeout(self.partial(self.checkLeaks, obj), 5);
+                window.setTimeout(mlc.partial(mlc.checkLeaks, obj), 5);
             }
         },
 
         "logTooBig": function (obj, limit) {
             if (limit > 200) {
-                MemoryLeakChecker.log("Object too big, memory leak? [size: " + limit + "]");
-                MemoryLeakChecker.log(obj);
-                MemoryLeakChecker.log("-------");
+                mlc.log("Object too big, memory leak? [size: " + limit + "]");
+                mlc.log(obj);
+                mlc.log("-------");
             }
         },
 
@@ -89,7 +88,7 @@
         },
 
         "isObject": function (obj) {
-            return (typeof obj === "object");
+            return typeof obj === "object";
         },
 
         "partial": function (fn) {
@@ -103,6 +102,6 @@
         }
     };
 
-    window.MemoryLeakChecker = MemoryLeakChecker;
-    MemoryLeakChecker.checkLeaks(window);
+    window.MemoryLeakChecker = mlc;
+    mlc.checkLeaks(window);
 }(window));
