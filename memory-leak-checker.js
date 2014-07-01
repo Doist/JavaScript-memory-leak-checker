@@ -7,8 +7,19 @@
         "is_seen": [],
 
         "log": function () {
+            var a, i, j;
             if (window.console && window.console.log) {
-                window.console.log.apply(window.console, arguments);
+                if (window.console.log.apply) {
+                    window.console.log.apply(window.console, arguments);
+                } else {
+                    //a = Array.prototype.slice.call(arguments); --Error in IE9
+                    a = [];
+                    j = arguments.length;
+                    for (i = 0; i < j; i += 1) {
+                        a[i] = arguments[i];
+                    }
+                    window.console.log(a);
+                }
             }
         },
 
