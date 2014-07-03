@@ -1,10 +1,16 @@
 (function (window) {
     "use strict";
 
-    var mlc = {
+    var le = false, mlc;
+
+    mlc = {
         "uniq_id": String((new Date()).getTime()),
         "checked": 1,
         "is_seen": [],
+
+        "enableLogException": function (a) {
+            le = a === true ? true : false;
+        },
 
         "log": function () {
             var a, i, j;
@@ -57,15 +63,16 @@
             mlc.checked += 1;
 
             if (mlc.isArray(obj) || mlc.isObject(obj)) {
-                obj.x_leaks_checked = obj.x_leaks_checked || "";
-                if (obj.x_leaks_checked === mlc.uniq_id) {
+                if ((obj.x_leaks_checked || "") === mlc.uniq_id) {
                     return;
                 }
 
                 try {
                     obj.x_leaks_checked = mlc.uniq_id;
                 } catch (ee) {
-                    mlc.log(obj, ee);
+                    if (le === true) {
+                        mlc.log(obj, ee);
+                    }
                 }
 
                 window.setTimeout(mlc.partial(mlc.checkLeaks, obj), 5);
@@ -114,5 +121,4 @@
     };
 
     window.MemoryLeakChecker = mlc;
-    mlc.checkLeaks(window);
 }(window));
